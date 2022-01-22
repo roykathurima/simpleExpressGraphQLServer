@@ -66,15 +66,34 @@ const RootQuery = new GraphQLObjectType({
             }
         }
     }
+});
+
+// Our Root Mutation :)
+const mutation = new GraphQLObjectType({
+    name: "Mutation",
+    fields: {
+        addCustomer: {
+            type: CustomerType,
+            args: {
+                name: {type: new GraphQLNonNull(GraphQLString)},
+                email: {type: new GraphQLNonNull(GraphQLString)},
+                age: {type: new GraphQLNonNull(GraphQLInt)},
+            },
+            async resolve(parentVal, args) {
+                return (await axios.post(CUSTOMER_URL, args)).data; 
+            }
+        }
+    }
 })
 
 module.exports = new GraphQLSchema({
-    query: RootQuery
+    query: RootQuery,
+    mutation
 })
 
 /**
  * 
- * At the heart of a GQL schema is the root query.
+ * At the heart of a GQL schema is the root query and mutation.
  * 
  * The root query has fields
  * The fields have a type and resolvers
