@@ -82,7 +82,28 @@ const mutation = new GraphQLObjectType({
             async resolve(parentVal, args) {
                 return (await axios.post(CUSTOMER_URL, args)).data; 
             }
-        }
+        },
+        patchCustomer: {
+            type: CustomerType,
+            args: {
+                id: {type: new GraphQLNonNull(GraphQLString)},
+                name: {type: GraphQLString},
+                email: {type: GraphQLString},
+                age: {type: GraphQLInt},
+            },
+            async resolve(parentVal, args) {
+                return (await axios.patch(`${CUSTOMER_URL}/${args.id}`, args)).data; 
+            }
+        },
+        deleteCustomer: {
+            type: CustomerType,
+            args: {
+                id: {type: new GraphQLNonNull(GraphQLString)},
+            },
+            async resolve(parentVal, args) {
+                return (await axios.delete(`${CUSTOMER_URL}/${args.id}`, args)).data; 
+            }
+        },
     }
 })
 
