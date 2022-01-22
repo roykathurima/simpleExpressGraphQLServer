@@ -7,13 +7,9 @@ const {
     GraphQLNonNull
 } = require('graphql');
 
-// Hardcoded data
+const axios = require('axios');
 
-const customers = [
-    {id:'1', name:'Roy Kathurima', email:'kathurima@gmai.com', age:25},
-    {id:'2', name:'Roy Murithi', email:'roy@gmai.com', age:27},
-    {id:'3', name:'Jason Mraz', email:'mraz@gmai.com', age:23},
-]
+const CUSTOMER_URL = 'http://localhost:3000/customers';
 
 // Customer Type
 const CustomerType = new GraphQLObjectType({
@@ -28,7 +24,8 @@ const CustomerType = new GraphQLObjectType({
 
 const CustomersType = new GraphQLList(CustomerType);
 
-const searchCustomerResolver = (parentVal, args) => {
+const searchCustomerResolver = async (parentVal, args) => {
+    const customers = (await axios.get(CUSTOMER_URL)).data;
     return customers.filter(customer => customer.name.toLowerCase().includes(args.keyword.toLowerCase()));
 }
 
@@ -41,8 +38,8 @@ const RootQuery = new GraphQLObjectType({
             args: {
                 id: {type: GraphQLString}
             },
-            resolve(parentValue, args) {
-                return customers.filter(customer => customer.id === args.id)[0];
+            async resolve(parentValue, args) {
+                return (await axios.get(`${CUSTOMER_URL}/${args.id}`)).data;
             }
         },
         customerByAge: {
@@ -50,7 +47,8 @@ const RootQuery = new GraphQLObjectType({
             args: {
                 age: {type: GraphQLInt}
             },
-            resolve(parentValue, args) {
+            async resolve(parentValue, args) {
+                const customers = (await axios.get(CUSTOMER_URL)).data;
                 return customers.filter(customer => customer.age === args.age)[0];
             }
         },
@@ -63,8 +61,8 @@ const RootQuery = new GraphQLObjectType({
         },
         customers: {
             type: CustomersType,
-            resolve(){
-                return customers;
+            async resolve(){
+                return (await axios.get(CUSTOMER_URL)).data;
             }
         }
     }

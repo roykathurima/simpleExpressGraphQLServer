@@ -1,0 +1,22 @@
+{
+    "customers": [
+        {
+            "id":"1",
+            "name":"Roy Kathurima",
+            "email":"kathurima@gmai.com",
+            "age":25
+        },
+        {
+            "id":"2",
+            "name":"Roy Murithi",
+            "email":"roy@gmai.com",
+            "age":27
+        },
+        {
+            "id":"3",
+            "name":"Jason Mraz",
+            "email":"mraz@gmai.com",
+            "age":23
+        }
+    ]
+}
